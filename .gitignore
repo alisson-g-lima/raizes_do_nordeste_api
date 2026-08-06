@@ -1,0 +1,19 @@
+# Ambientes Virtuais
+venv/
+env/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Banco de Dados
+raizes.db
+*.sqlite3
+*.db
+
+# IDEs e Sistema Operacional
+.vscode/
+.idea/
+.DS_Store
