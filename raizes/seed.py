@@ -20,10 +20,10 @@ def inicializar_estrutura_banco():
 
     print(">> Subindo filiais na rede...")
     sede = Unidade(nome="Matriz Recife", endereco="Boa Viagem, Recife-PE", is_matriz=True)
-    franquia_olinda = Unidade(nome="Filial Olinda", endereco="Centro Histórico, Olinda-PE", is_matriz=False)
-    franquia_caruaru = Unidade(nome="Filial Caruaru", endereco="Alto do Moura, Caruaru-PE", is_matriz=False)
+    franquia_sp = Unidade(nome="Filial São Paulo", endereco="Avenida Paulista, São Paulo-SP", is_matriz=False)
+    franquia_ba = Unidade(nome="Filial Salvador", endereco="Rio Vermelho, Salvador-BA", is_matriz=False)
     
-    db.add_all([sede, franquia_olinda, franquia_caruaru])
+    db.add_all([sede, franquia_sp, franquia_ba])
     db.commit()
 
     print(">> Cadastrando pratos e bebidas regionais...")
@@ -48,13 +48,13 @@ def inicializar_estrutura_banco():
     for item in pratos_bebidas:
         lotes_estoque.append(Estoque(id_unidade=sede.id, id_produto=item.id, quantidade=50))
         
-    menu_olinda = [p for p in pratos_bebidas if p.nome not in ["Moqueca Pernambucana", "Baião de Dois", "Suco de Umbu"]]
-    for item in menu_olinda:
-        lotes_estoque.append(Estoque(id_unidade=franquia_olinda.id, id_produto=item.id, quantidade=20))
+    menu_sp = [p for p in pratos_bebidas if p.nome not in ["Moqueca Pernambucana", "Baião de Dois", "Suco de Umbu"]]
+    for item in menu_sp:
+        lotes_estoque.append(Estoque(id_unidade=franquia_sp.id, id_produto=item.id, quantidade=20))
 
-    menu_caruaru = [p for p in pratos_bebidas if p.nome not in ["Bolo de Rolo", "Cajuína"]]
-    for item in menu_caruaru:
-        lotes_estoque.append(Estoque(id_unidade=franquia_caruaru.id, id_produto=item.id, quantidade=30))
+    menu_ba = [p for p in pratos_bebidas if p.nome not in ["Bolo de Rolo", "Cajuína"]]
+    for item in menu_ba:
+        lotes_estoque.append(Estoque(id_unidade=franquia_ba.id, id_produto=item.id, quantidade=30))
 
     db.add_all(lotes_estoque)
     db.commit()

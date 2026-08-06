@@ -43,7 +43,7 @@ class PedidoCreate(BaseModel):
 
     @validator('canal_pedido')
     def validar_origem_do_pedido(cls, valor):
-        canais_permitidos = ['APP', 'TOTEM', 'BALCAO', 'PICKUP', 'WEB']
+        canais_permitidos = ['APP', 'TOTEM', 'BALCAO', 'PICKUP']
         valor_formatado = valor.upper().strip()
         if valor_formatado not in canais_permitidos:
             raise ValueError(f"Canal '{valor}' não é reconhecido. Utilize um dos canais oficiais do sistema.")

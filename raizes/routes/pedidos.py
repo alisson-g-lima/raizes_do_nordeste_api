@@ -96,7 +96,7 @@ def lancar_novo_pedido(
                 detail="Você está tentando abrir um pedido presencial via plataforma online."
             )
 
-        if cargo == "ATENDENTE" and dados_compra.canal_pedido in ["APP", "TOTEM", "WEB", "PICKUP"]:
+        if cargo == "ATENDENTE" and dados_compra.canal_pedido in ["APP", "TOTEM", "PICKUP"]:
             raise HTTPException(
                 status_code=403, 
                 detail="Atendentes só podem registrar vendas na modalidade BALCAO."

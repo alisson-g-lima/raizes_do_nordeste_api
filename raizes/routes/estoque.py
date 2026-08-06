@@ -12,7 +12,7 @@ router = APIRouter(prefix="/estoque", tags=["Estoque"])
 
 @router.get("/unidade/{codigo_loja}", response_model=List[ProdutoResponse])
 def consultar_estoque_loja(
-    codigo_loja: int, # Path Param
+    codigo_loja: int,
     db: Session = Depends(get_db), 
     usuario_atual: Usuario = Depends(obter_usuario_atual),
     categoria: Optional[str] = Query(None, description="Filtrar por categoria (ex: PRATO, BEBIDA) - Query Param")
