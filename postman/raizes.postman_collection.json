@@ -1,0 +1,533 @@
+{
+    "info": {
+        "_postman_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
+        "name": "API Raízes do Nordeste",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Autenticação",
+            "item": [
+                {
+                    "name": "Cadastrar Usuario",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nome\": \"Cliente da Silva\",\n  \"email\": \"cliente3@raizes.com\",\n  \"senha\": \"123\",\n  \"perfil\": \"CLIENTE\",\n  \"consentimento_lgpd\": true\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/auth/cadastro",
+                            "host": ["http://localhost:8000"],
+                            "path": ["auth", "cadastro"]
+                        }
+                    }
+                },
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.accessToken) {",
+                                    "    pm.collectionVariables.set(\"token\", jsonData.accessToken);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"cliente1@raizes.com\",\n  \"senha\": \"123\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/auth/login",
+                            "host": ["http://localhost:8000"],
+                            "path": ["auth", "login"]
+                        }
+                    }
+                },
+                {
+                    "name": "Consultar Perfil",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/auth/me",
+                            "host": ["http://localhost:8000"],
+                            "path": ["auth", "me"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Unidades",
+            "item": [
+                {
+                    "name": "Consultar Unidades",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/unidades/?page=1&limit=10",
+                            "host": ["http://localhost:8000"],
+                            "path": ["unidades", ""],
+                            "query": [
+                                { "key": "page", "value": "1" },
+                                { "key": "limit", "value": "10" }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Criar Unidade",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nome\": \"Nova Filial\",\n  \"endereco\": \"Rua Nova, 123\",\n  \"is_matriz\": false\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/unidades/",
+                            "host": ["http://localhost:8000"],
+                            "path": ["unidades", ""]
+                        }
+                    }
+                },
+                {
+                    "name": "Fechar Unidade",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/unidades/1",
+                            "host": ["http://localhost:8000"],
+                            "path": ["unidades", "1"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Produtos",
+            "item": [
+                 {
+                    "name": "Consultar Produtos por Unidade",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/estoque/unidade/1?categoria=PRATO",
+                            "host": ["http://localhost:8000"],
+                            "path": ["estoque", "unidade", "1"],
+                            "query": [
+                                { "key": "categoria", "value": "PRATO" }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Pedidos",
+            "item": [
+                {
+                    "name": "Listar Pedidos por Canal",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/pedidos/?page=1&limit=10&canalPedido=APP",
+                            "host": ["http://localhost:8000"],
+                            "path": ["pedidos", ""],
+                            "query": [
+                                { "key": "page", "value": "1" },
+                                { "key": "limit", "value": "10" },
+                                { "key": "canalPedido", "value": "APP" }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Listar Pedidos Por Unidade",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/pedidos/1?page=1&limit=10",
+                            "host": ["http://localhost:8000"],
+                            "path": ["pedidos", "1"],
+                            "query": [
+                                { "key": "page", "value": "1" },
+                                { "key": "limit", "value": "10" }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Criar Novo Pedido",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"id_cliente\": 1,\n  \"id_unidade\": 1,\n  \"canal_pedido\": \"APP\",\n  \"forma_pagamento\": \"PIX\",\n  \"itens\": [\n    {\n      \"produto_id\": 1,\n      \"quantidade\": 2\n    }\n  ],\n  \"resgatar_pontos\": false\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/pedidos/",
+                            "host": ["http://localhost:8000"],
+                            "path": ["pedidos", ""]
+                        }
+                    }
+                },
+                {
+                    "name": "Liberar Pedido Cozinha",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/pedidos/1/pronto",
+                            "host": ["http://localhost:8000"],
+                            "path": ["pedidos", "1", "pronto"]
+                        }
+                    }
+                },
+                {
+                    "name": "Finalizar Entrega Balcao",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/pedidos/1/entregue",
+                            "host": ["http://localhost:8000"],
+                            "path": ["pedidos", "1", "entregue"]
+                        }
+                    }
+                },
+                {
+                    "name": "Forcar Cancelamento",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/pedidos/1/cancelar",
+                            "host": ["http://localhost:8000"],
+                            "path": ["pedidos", "1", "cancelar"]
+                        }
+                    }
+                }
+            ]
+        },
+		{
+            "name": "Pagamentos",
+            "item": [
+                {
+                    "name": "Processar Pagamento",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"pedidoId\": 1,\n  \"metodo\": \"PIX\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/pagamentos/",
+                            "host": ["http://localhost:8000"],
+                            "path": ["pagamentos", ""]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Estoque",
+            "item": [
+                {
+                    "name": "Criar Produto",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nome\": \"Novo Prato\",\n  \"descricao\": \"Descricao do prato\",\n  \"preco\": 25.50,\n  \"categoria\": \"PRATO\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/produtos/",
+                            "host": ["http://localhost:8000"],
+                            "path": ["produtos", ""]
+                        }
+                    }
+                },
+                {
+                    "name": "Excluir Produto",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/produtos/1",
+                            "host": ["http://localhost:8000"],
+                            "path": ["produtos", "1"]
+                        }
+                    }
+                },
+                 {
+                    "name": "Adicionar Produto ao Estoque",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"id_produto\": 1,\n  \"id_unidade\": 1,\n  \"quantidade\": 50\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/estoque/",
+                            "host": ["http://localhost:8000"],
+                            "path": ["estoque", ""]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Promoções",
+            "item": [
+                {
+                    "name": "Habilitar Oferta",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"id_produto\": 1,\n  \"id_unidade\": 1,\n  \"percentual_desconto\": 10.0\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/promocoes/",
+                            "host": ["http://localhost:8000"],
+                            "path": ["promocoes", ""]
+                        }
+                    }
+                },
+                {
+                    "name": "Derrubar Oferta",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/promocoes/1",
+                            "host": ["http://localhost:8000"],
+                            "path": ["promocoes", "1"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Auditoria",
+            "item": [
+                {
+                    "name": "Listar Logs Auditoria",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/auditoria/?page=1&limit=10",
+                            "host": ["http://localhost:8000"],
+                            "path": ["auditoria", ""],
+                            "query": [
+                                { "key": "page", "value": "1" },
+                                { "key": "limit", "value": "10" }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Erros",
+            "item": [
+                {
+                    "name": "Acesso sem token (401)",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/auth/me",
+                            "host": ["http://localhost:8000"],
+                            "path": ["auth", "me"]
+                        }
+                    }
+                },
+				{
+                    "name": "Pagamento Recusado (400)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"pedidoId\": 1,\n  \"metodo\": \"CHEQUE\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/pagamentos/",
+                            "host": ["http://localhost:8000"],
+                            "path": ["pagamentos", ""]
+                        },
+                        "description": "Pré-condição: Enviar um método de pagamento não suportado (ex: CHEQUE) para forçar a recusa do sistema."
+                    }
+                },
+                {
+                    "name": "Criar Unidade Sem Permissao (403)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nome\": \"Filial Proibida\",\n  \"endereco\": \"Rua X\",\n  \"is_matriz\": false\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/unidades/",
+                            "host": ["http://localhost:8000"],
+                            "path": ["unidades", ""]
+                        },
+                        "description": "Pré-condição: Estar logado com perfil CLIENTE."
+                    }
+                },
+                {
+                    "name": "Pedido Sem Estoque (409)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"id_cliente\": 1,\n  \"id_unidade\": 1,\n  \"canal_pedido\": \"APP\",\n  \"forma_pagamento\": \"PIX\",\n  \"itens\": [\n    {\n      \"produto_id\": 1,\n      \"quantidade\": 9999\n    }\n  ],\n  \"resgatar_pontos\": false\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/pedidos/",
+                            "host": ["http://localhost:8000"],
+                            "path": ["pedidos", ""]
+                        }
+                    }
+                },
+                {
+                    "name": "Pedido Canal Invalido (422)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"id_cliente\": 1,\n  \"id_unidade\": 1,\n  \"canal_pedido\": \"IFOOD\",\n  \"forma_pagamento\": \"PIX\",\n  \"itens\": [\n    {\n      \"produto_id\": 1,\n      \"quantidade\": 1\n    }\n  ],\n  \"resgatar_pontos\": false\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/pedidos/",
+                            "host": ["http://localhost:8000"],
+                            "path": ["pedidos", ""]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [""]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [""]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "token",
+            "value": ""
+        }
+    ]
+}
