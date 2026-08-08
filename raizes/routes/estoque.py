@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
-
 from raizes.schemas import EstoqueUpdate, ProdutoResponse
 from raizes.models import Usuario
 from raizes.extensions import get_db

@@ -125,6 +125,13 @@ def liberar_pedido_cozinha(
     if not comanda:
         raise HTTPException(status_code=404, detail="Comanda não localizada no sistema ativo.")
         
+    if comanda.status != "PREPARO":
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Bloqueio de segurança: o pedido está com status '{comanda.status}'. A cozinha só pode liberar comandas que estejam em 'PREPARO'."
+        )
+    # ----------------------------------------
+        
     comanda.status = "PRONTO"
     db.commit()
     db.refresh(comanda)

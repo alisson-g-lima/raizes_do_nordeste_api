@@ -3,14 +3,12 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from datetime import datetime
-
-from raizes.extensions import engine, Base
-from raizes.routes import pedidos, auth, produtos, auditoria, unidades, promocoes, estoque
+from raizes.routes import pedidos, auth, produtos, auditoria, unidades, promocoes, estoque, pagamentos
 
 app = FastAPI(
     title="API Raízes do Nordeste",
     description="Projeto Multidisciplinar - Trilha Back-End",
-    version="1.0.0"
+    version="2.0.0"
 )
 
 @app.exception_handler(StarletteHTTPException)
@@ -67,6 +65,7 @@ app.include_router(pedidos.router)
 app.include_router(auditoria.router)
 app.include_router(unidades.router)
 app.include_router(promocoes.router)
+app.include_router(pagamentos.router)
 
 @app.get("/")
 def root():

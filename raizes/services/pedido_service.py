@@ -1,8 +1,6 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-import json
-
-from raizes.models import Pedido, Estoque, Produto, Usuario, LogAuditoria, Promocao, Unidade
+from raizes.models import Pedido, Estoque, Produto, Usuario, LogAuditoria, Promocao, Unidade, Pagamento, ItemPedido
 from raizes.schemas import PedidoCreate
 
 def criar_pedido_com_pagamento(db: Session, dados_requisicao: PedidoCreate) -> Pedido:
@@ -14,6 +12,7 @@ def criar_pedido_com_pagamento(db: Session, dados_requisicao: PedidoCreate) -> P
         )
 
     total_da_compra = 0.0
+    lista_itens = []
 
     for item_carrinho in dados_requisicao.itens:
         produto_db = db.query(Produto).filter(Produto.id == item_carrinho.produto_id).first()
@@ -46,6 +45,14 @@ def criar_pedido_com_pagamento(db: Session, dados_requisicao: PedidoCreate) -> P
 
         total_da_compra += (valor_base * item_carrinho.quantidade)
         registro_estoque.quantidade -= item_carrinho.quantidade
+        
+        lista_itens.append(
+            ItemPedido(
+                produto_id=item_carrinho.produto_id,
+                quantidade=item_carrinho.quantidade,
+                preco_unitario=valor_base
+            )
+        )
 
     comprador = db.query(Usuario).filter(Usuario.id == dados_requisicao.id_cliente).first()
     
@@ -75,16 +82,19 @@ def criar_pedido_com_pagamento(db: Session, dados_requisicao: PedidoCreate) -> P
         id_unidade=dados_requisicao.id_unidade,
         canal_pedido=dados_requisicao.canal_pedido,
         total=total_da_compra,
-        status="PREPARO",
-        pagamento_mock_payload=json.dumps({
-            "transacao": "123-API-RAIZES", 
-            "status": "APROVADO", 
-            "metodo": pagamento_escolhido, 
-            "valor_pago": total_da_compra
-        })
+        status="PENDENTE",
+        itens=lista_itens
     )
     
     db.add(pedido_fechado)
+    db.flush()
+
+    registro_pagamento = Pagamento(
+        pedido_id=pedido_fechado.id,
+        status="PENDENTE",
+        metodo=pagamento_escolhido
+    )
+    db.add(registro_pagamento)
 
     if comprador and comprador.perfil == "CLIENTE" and total_da_compra > 0:
         comprador.pontos += int(total_da_compra)
@@ -96,7 +106,7 @@ def criar_pedido_com_pagamento(db: Session, dados_requisicao: PedidoCreate) -> P
         id_usuario=dados_requisicao.id_cliente,
         acao="CRIAR_PEDIDO",
         recurso_id=pedido_fechado.id,
-        detalhes=f"Pedido registrado via {dados_requisicao.canal_pedido}. Valor final: R$ {total_da_compra:.2f}"
+        detalhes=f"Pedido registrado via {dados_requisicao.canal_pedido}. Aguardando pagamento de R$ {total_da_compra:.2f}"
     )
     db.add(log_venda)
     db.commit()

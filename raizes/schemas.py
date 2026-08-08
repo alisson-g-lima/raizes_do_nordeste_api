@@ -33,6 +33,15 @@ class ItemPedidoCreate(BaseModel):
     produto_id: int
     quantidade: int
 
+class ItemPedidoResponse(BaseModel):
+    id: int
+    produto_id: int
+    quantidade: int
+    preco_unitario: float
+
+    class Config:
+        from_attributes = True
+
 class PedidoCreate(BaseModel):
     id_cliente: int
     id_unidade: int
@@ -55,12 +64,28 @@ class PedidoResponse(BaseModel):
     status: str
     total: float
     data_criacao: datetime
+    itens: List[ItemPedidoResponse] = []
 
     class Config:
         from_attributes = True
 
 class PedidoStatusUpdate(BaseModel):
     status: str
+
+class PagamentoRequest(BaseModel):
+    pedidoId: int
+    metodo: str
+
+class PagamentoResponse(BaseModel):
+    id: int
+    pedidoId: int
+    status: str
+    valor: float
+    metodo: str
+    transacaoId: Optional[str] = None
+
+    class Config:
+        from_attributes = True
 
 class UsuarioCreate(BaseModel):
     nome: str

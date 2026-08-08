@@ -1,5 +1,6 @@
 from raizes.extensions import SessionLocal, engine, Base
-from raizes.models import Usuario, Unidade, Produto, Estoque
+from raizes.models import Usuario, Unidade, Produto, Estoque, ItemPedido, Pedido, Pagamento
+from raizes.security import gerar_hash_senha
 
 def inicializar_estrutura_banco():
     Base.metadata.create_all(bind=engine)
@@ -12,10 +13,25 @@ def inicializar_estrutura_banco():
 
     print(">> Zerando registros antigos e preparando o terreno para a nova carga de dados...")
 
+    db.query(Pagamento).delete()
+    db.query(ItemPedido).delete()
+    db.query(Pedido).delete()
     db.query(Estoque).delete()
     db.query(Produto).delete()
     db.query(Unidade).delete()
     db.query(Usuario).delete()
+    db.commit()
+
+    print(">> Cadastrando usuários de teste para o Postman...")
+    senha_padrao = gerar_hash_senha("123")
+    usuarios_teste = [
+        Usuario(nome="João Silva", email="cliente1@raizes.com", senha=senha_padrao, perfil="CLIENTE", consentimento_lgpd=True, pontos=150),
+        Usuario(nome="Maria Oliveira", email="cliente2@raizes.com", senha=senha_padrao, perfil="CLIENTE", consentimento_lgpd=True, pontos=0),
+        Usuario(nome="Carlos Silva", email="atendente@raizes.com", senha=senha_padrao, perfil="ATENDENTE", consentimento_lgpd=True),
+        Usuario(nome="Ana Souza", email="cozinha@raizes.com", senha=senha_padrao, perfil="COZINHA", consentimento_lgpd=True),
+        Usuario(nome="Roberto Alencar", email="gerente@raizes.com", senha=senha_padrao, perfil="GERENTE", consentimento_lgpd=True)
+    ]
+    db.add_all(usuarios_teste)
     db.commit()
 
     print(">> Subindo filiais na rede...")
